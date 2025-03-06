@@ -98,8 +98,11 @@ export default function Signup() {
               id="exampleInputPassword1"
             />
           </div>
-          <button type="submit" className="m-3 mybtn">
-            Submit
+          <button className="m-3 mybtn" onClick={(e) => handleSubmit(e, "student")}>
+            Signup as User
+          </button>
+          <button className="m-3 mybtn" onClick={(e) => handleSubmit(e, "vendor")}>
+            Signup as Vendor
           </button>
           <Link to="/login" className="m-3 mybtn">
             Already a user?

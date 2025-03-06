@@ -13,8 +13,11 @@ export default function Navbar() {
   const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("authToken");
+    localStorage.removeItem("userRole");
     navigate("/login");
   };
+
+  const userRole = localStorage.getItem("userRole");
   return (
     <div>
       <nav className="navbar navbar-expand-lg mynavbar ">
@@ -26,7 +29,7 @@ export default function Navbar() {
           >
             NITFood
           </Link>
-          <button
+          {/* <button
             className="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
@@ -36,7 +39,7 @@ export default function Navbar() {
             aria-label="Toggle navigation"
           >
             <span className="navbar-toggler-icon"></span>
-          </button>
+          </button> */}
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav me-auto ">
               <li className="nav-item">
@@ -63,7 +66,16 @@ export default function Navbar() {
               ) : (
                 ""
               )}
-              {localStorage.getItem("authToken") ? (
+              {userRole === "vendor" ? (
+                <li className="nav-item">
+                  <Link className="btn mx-1" style={{ color: "black" }} to="/addDish">
+                    Add Dish
+                  </Link>
+                </li>
+              ) : (
+                ""
+              )}
+              {/* {localStorage.getItem("authToken") ? (
                 <li className="nav-item">
                   <Link
                     className="btn  mx-1"
@@ -76,7 +88,7 @@ export default function Navbar() {
                 </li>
               ) : (
                 ""
-              )}
+              )} */}
             </ul>
             {!localStorage.getItem("authToken") ? (
               <div className="d-flex">

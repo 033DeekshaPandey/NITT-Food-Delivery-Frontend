@@ -10,7 +10,7 @@ export default function Login() {
     password: "",
   });
   let navigate = useNavigate();
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, role) => {
     e.preventDefault();
     console.log(
       JSON.stringify({
@@ -35,6 +35,7 @@ export default function Login() {
     if (json.success) {
       localStorage.setItem("userEmail", credentials.email);
       localStorage.setItem("authToken", json.authToken);
+      localStorage.setItem("userRole", role);
       console.log(localStorage.getItem("authToken"));
       navigate("/");
     }
@@ -80,8 +81,11 @@ export default function Login() {
             />
           </div>
 
-          <button type="submit" className="m-3 mybtn">
-            Submit
+          <button className="m-3 mybtn" onClick={(e) => handleSubmit(e, "student")}>
+            Login as User
+          </button>
+          <button className="m-3 mybtn" onClick={(e) => handleSubmit(e, "vendor")}>
+            Login as Vendor
           </button>
           <Link to="/createuser" className="m-3 mybtn">
             New user?
