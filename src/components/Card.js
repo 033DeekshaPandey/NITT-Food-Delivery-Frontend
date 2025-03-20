@@ -16,7 +16,7 @@ export default function Card(props) {
 
   const loadData = async () => {
     let email = props.foodItem.email;
-    const response = await fetch("http://localhost:5000/api/getuser", {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/getuser`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

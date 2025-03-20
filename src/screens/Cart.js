@@ -28,7 +28,7 @@ export default function Cart() {
     for (let i = 0; i < data.length; i++) {
       const { email, ...temp } = data[i];
       temp.userEmail = userEmail;
-      response = await fetch("http://localhost:5000/api/orderData", {
+      response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/orderData`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -41,7 +41,7 @@ export default function Cart() {
       });
     }
 
-    let res = await fetch("http://localhost:5000/api/checkout", {
+    let res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/checkout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -55,18 +55,19 @@ export default function Cart() {
     console.log("Order: ", order);
     console.log("Amount: ", order.amount);
     const options = {
-      key: "rzp_test_NHhXvVpt5dUmb0",
+      key: process.env.REACT_APP_RAZORPAY_KEY_ID,
       amount: order.amount,
       currency: "INR",
       name: "Deeksha",
       description: "RazorPay",
       // image: "https://avatars.githubusercontent.com/u/25058652?v=4",
       order_id: order.id,
-      callback_url: "http://localhost:5000/api/paymentverification",
+      callback_url: `${process.env.REACT_APP_BACKEND_URL}/api/paymentverification`,
       prefill: {
         name: "XYZ",
         email: "XYZ@example.com",
-        contact: "9999999999",
+        contact: "9958291698",
+        // contact: process.env.REACT_APP_RAZORPAY_CONTACT
       },
       notes: {
         address: "Razorpay Corporate Office",

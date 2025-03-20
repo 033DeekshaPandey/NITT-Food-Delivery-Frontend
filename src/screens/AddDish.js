@@ -12,12 +12,13 @@ function AddDish() {
     full: "",
     email: localStorage.getItem("userEmail"),
     description: "",
+    availability: "",
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(dish);
-    const response = await fetch("http://localhost:5000/api/fooditem", {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/fooditem`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -48,87 +49,35 @@ function AddDish() {
         <div className="container">
           <form className="login1" onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="exampleInputcategory" className="form-label">
-                Category Name
-              </label>
-              <input
-                type="text"
-                className=" myinput "
-                name="CategoryName"
-                id="exampleInputcategory"
-                value={dish.CategoryName}
-                onChange={onChange}
-              />
+              <label htmlFor="exampleInputcategory" className="form-label">Category Name</label>
+              <input type="text" className="myinput" name="CategoryName" id="exampleInputcategory" value={dish.CategoryName} onChange={onChange} />
             </div>
             <div className="mb-3">
-              <label htmlFor="exampleInputName" className="form-label">
-                Name of dish
-              </label>
-              <input
-                type="text"
-                className=" myinput "
-                name="name"
-                id="exampleInputName"
-                value={dish.name}
-                onChange={onChange}
-              />
+              <label htmlFor="exampleInputName" className="form-label">Name of dish</label>
+              <input type="text" className="myinput" name="name" id="exampleInputName" value={dish.name} onChange={onChange} />
             </div>
             <div className="mb-3">
-              <label htmlFor="exampleInputImg" className="form-label">
-                Image Link
-              </label>
-              <input
-                type="text"
-                className=" myinput "
-                name="img"
-                id="exampleInputImg"
-                value={dish.img}
-                onChange={onChange}
-              />
+              <label htmlFor="exampleInputImg" className="form-label"> Image Link</label>
+              <input type="text" className=" myinput " name="img" id="exampleInputImg" value={dish.img} onChange={onChange} />
             </div>
             <div className="mb-3">
-              <label htmlFor="exampleInputHalfPlate" className="form-label">
-                half plate price
-              </label>
-              <input
-                type="text"
-                className=" myinput "
-                name="half"
-                id="exampleInputHalfPlate"
-                value={dish.half}
-                onChange={onChange}
-              />
+              <label htmlFor="exampleInputHalfPlate" className="form-label">Half Plate Price</label>
+              <input type="text" className=" myinput " name="half" id="exampleInputHalfPlate" value={dish.half} onChange={onChange} />
             </div>
             <div className="mb-3">
-              <label htmlFor="exampleInputfullPlate" className="form-label">
-                full plate price
-              </label>
-              <input
-                type="text"
-                className=" myinput "
-                name="full"
-                id="exampleInputfullPlate"
-                value={dish.full}
-                onChange={onChange}
-              />
+              <label htmlFor="exampleInputfullPlate" className="form-label">Full Plate Price</label>
+              <input type="text" className=" myinput " name="full" id="exampleInputfullPlate" value={dish.full} onChange={onChange} />
             </div>
             <div className="mb-3">
-              <label htmlFor="exampleInputdescription" className="form-label">
-                description
-              </label>
-              <input
-                type="text"
-                className=" myinput "
-                name="description"
-                id="exampleInputdescription"
-                value={dish.description}
-                onChange={onChange}
-              />
+              <label htmlFor="exampleInputdescription" className="form-label">Description</label>
+              <input type="text" className=" myinput " name="description" id="exampleInputdescription" value={dish.description} onChange={onChange} />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="exampleInputavailability" className="form-label">Availability</label>
+              <input type="text" className=" myinput " name="availability" id="exampleInputavailability" value={dish.availability} onChange={onChange} />
             </div>
 
-            <button type="submit" className="m-3 mybtn">
-              Submit
-            </button>
+            <button type="submit" className="m-3 mybtn">Submit</button>
           </form>
         </div>
         <Footer />

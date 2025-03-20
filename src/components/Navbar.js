@@ -43,64 +43,81 @@ export default function Navbar() {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav me-auto ">
               <li className="nav-item">
-                <Link
-                  className="btn  mx-1"
-                  style={{ color: "black" }}
-                  aria-current="page"
-                  to="/"
-                >
-                  Home
-                </Link>
+                {userRole === "vendor" ? (
+                  <Link
+                    className="btn mx-1"
+                    style={{ color: "black" }}
+                    aria-current="page"
+                    to="/"
+                  >
+                    My Dishes
+                  </Link>
+                ) : (
+                  <Link
+                    className="btn mx-1"
+                    style={{ color: "black" }}
+                    aria-current="page"
+                    to="/"
+                  >
+                    Home
+                  </Link>
+                )}
               </li>
               {localStorage.getItem("authToken") ? (
                 <li className="nav-item">
-                  <Link
-                    className="btn  mx-1"
-                    style={{ color: "black" }}
-                    aria-current="page"
-                    to="/myOrder"
-                  >
-                    My Order
-                  </Link>
+                  {userRole === "vendor" ? (
+                    <Link
+                      className="btn mx-1"
+                      style={{ color: "black" }}
+                      aria-current="page"
+                      to="/myOrder"
+                    >
+                      Order History
+                    </Link>
+                  ) : (
+                    <Link
+                      className="btn mx-1"
+                      style={{ color: "black" }}
+                      aria-current="page"
+                      to="/myOrder"
+                    >
+                      Order History
+                    </Link>
+                  )}
                 </li>
               ) : (
                 ""
               )}
-              {userRole === "vendor" ? (
+              {localStorage.getItem("authToken") ? (
                 <li className="nav-item">
-                  <Link className="btn mx-1" style={{ color: "black" }} to="/addDish">
-                    Add Dish
-                  </Link>
+                  {userRole === "vendor" ? (
+                    <Link
+                      className="btn mx-1"
+                      style={{ color: "black" }}
+                      aria-current="page"
+                      to="/addDish"
+                    >
+                      Add Dish
+                    </Link>
+                  ) : (
+                    ""
+                  )}
                 </li>
               ) : (
                 ""
               )}
-              {/* {localStorage.getItem("authToken") ? (
-                <li className="nav-item">
-                  <Link
-                    className="btn  mx-1"
-                    style={{ color: "black" }}
-                    aria-current="page"
-                    to="/addDish"
-                  >
-                    Add Dish
-                  </Link>
-                </li>
-              ) : (
-                ""
-              )} */}
             </ul>
             {!localStorage.getItem("authToken") ? (
               <div className="d-flex">
                 <Link
-                  className="btn  mx-1"
+                  className="btn mx-1"
                   style={{ color: "black" }}
                   to="/login"
                 >
                   Login
                 </Link>
                 <Link
-                  className="btn  mx-1"
+                  className="btn mx-1"
                   style={{ color: "black" }}
                   to="/createuser"
                 >
@@ -112,7 +129,7 @@ export default function Navbar() {
                 {
                   <div>
                     <div
-                      className="btn bg-white text-success mx-2"
+                      className="btnbg-white text-success mx-2"
                       style={{ color: "black" }}
                       onClick={() => setCartView(true)}
                     >
@@ -127,7 +144,7 @@ export default function Navbar() {
                       </Modal>
                     ) : null}
                     <div
-                      className="btn bg-white text-danger mx-2"
+                      className="btnbg-white text-danger mx-2"
                       onClick={handleLogout}
                     >
                       Logout
