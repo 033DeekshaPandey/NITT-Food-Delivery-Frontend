@@ -10,7 +10,6 @@ import Signup from "./components/Signup";
 import { CartProvider } from "./components/ContextReducer";
 import MyOrder from "./screens/MyOrder";
 import AddDish from "./screens/AddDish.js";
-import MyDishes from "./screens/MyDishes.js";
 import VendorOrders from "./screens/VendorOrders.js";
 
 function App() {
@@ -20,11 +19,7 @@ function App() {
     <CartProvider>
       <Router>
         <Routes>
-          {userRole === "vendor" ? (
-            <Route exact path="/" element={<MyDishes />} />
-          ) : (
-            <Route exact path="/" element={<Home />} />
-          )}
+          <Route exact path="/" element={<Home />} />
           <Route exact path="/createuser" element={<Signup />} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/myOrder" element={<MyOrder />} />

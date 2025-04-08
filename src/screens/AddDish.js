@@ -35,6 +35,16 @@ function AddDish() {
       //   navigate("/login")
     } else {
       alert(json.message);
+      setDish({
+        CategoryName: "",
+        name: "",
+        img: "",
+        half: "",
+        full: "",
+        email: localStorage.getItem("userEmail"), 
+        description: "",
+        availability: "",
+      });
     }
   };
 

@@ -7,10 +7,13 @@ import Cart from "../screens/Cart";
 import { useCart } from "./ContextReducer";
 import "../App.css";
 
-export default function Navbar() {
+export default function Navbar({ onSearch }) {
   const [cartView, setCartView] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
   let data = useCart();
   const navigate = useNavigate();
+
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userRole");
@@ -18,6 +21,15 @@ export default function Navbar() {
   };
 
   const userRole = localStorage.getItem("userRole");
+
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    onSearch && onSearch(query);
+  };
+
+  const handleSearchClick = () => onSearch(searchQuery);
+
   return (
     <div>
       <nav className="navbar navbar-expand-lg mynavbar ">
@@ -29,17 +41,17 @@ export default function Navbar() {
           >
             NITFood
           </Link>
-          {/* <button
+          <button
             className="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
-            data-bs-target="/navbarNav"
+            data-bs-target="#navbarNav"
             aria-controls="navbarNav"
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
             <span className="navbar-toggler-icon"></span>
-          </button> */}
+          </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav me-auto ">
               <li className="nav-item">
@@ -106,6 +118,26 @@ export default function Navbar() {
               ) : (
                 ""
               )}
+              {localStorage.getItem("authToken") ? (
+                <li className="nav-item">
+                  <div className="d-flex align-items-center">
+                    <input
+                      type="text"
+                      className="myinput d-none d-md-block me-2"
+                      placeholder="Search dishes..."
+                      value={searchQuery}
+                      onChange={handleSearchChange}
+                      style={{ maxWidth: "200px" }}
+                    />
+                    <button
+                      className="btn btn-outline-dark"
+                      onClick={handleSearchClick}
+                    >
+                      🔎
+                    </button>
+                  </div>
+                </li>
+              ) : null}
             </ul>
             {!localStorage.getItem("authToken") ? (
               <div className="d-flex">
@@ -127,27 +159,55 @@ export default function Navbar() {
             ) : (
               <div>
                 {
-                  <div>
-                    <div
-                      className="btnbg-white text-success mx-2"
-                      style={{ color: "black" }}
-                      onClick={() => setCartView(true)}
-                    >
-                      My Cart {"  "}
-                      <Badge pill bg="danger">
-                        {data.length}
-                      </Badge>
-                    </div>
-                    {cartView ? (
-                      <Modal onClose={() => setCartView(false)}>
-                        <Cart />
-                      </Modal>
-                    ) : null}
+                  <div className="d-flex align-items-center justify-content-end">
+                    {userRole !== "vendor" && (
+                      <div>
+                        <div
+                          className="btnbg-white text-success mx-2"
+                          style={{ color: "black" }}
+                          onClick={() => setCartView(true)}
+                        >
+                          <button className="mybtn">
+                            My Cart {"  "}
+                            <Badge pill bg="danger">
+                              {data.length}
+                            </Badge>
+                          </button>
+                        </div>
+                        {cartView ? (
+                          <Modal onClose={() => setCartView(false)}>
+                            <Cart />
+                          </Modal>
+                        ) : null}
+                      </div>
+                    )}
+                    {/* {userRole !== "vendor" && (
+                      <li className="nav-item">
+                        <Link className="nav-link" to="/cart">
+                          <div
+                            className="btnbg-white text-success mx-2"
+                            style={{ color: "black" }}
+                            onClick={() => setCartView(true)}
+                          >
+                            My Cart {"  "}
+                            <Badge pill bg="danger">
+                              {data.length}
+                            </Badge>
+                          </div>
+                          {cartView ? (
+                            <Modal onClose={() => setCartView(false)}>
+                              <Cart />
+                            </Modal>
+                          ) : null}
+                        </Link>
+                      </li>
+                    )} */}
+
                     <div
                       className="btnbg-white text-danger mx-2"
                       onClick={handleLogout}
                     >
-                      Logout
+                      <button className="mybtn">Logout</button>
                     </div>
                   </div>
                 }

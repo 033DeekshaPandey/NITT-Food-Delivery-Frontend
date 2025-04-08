@@ -9,17 +9,48 @@ export default function Home() {
   const [foodCat, setfoodcat] = useState([]);
   const [foodItem, setfoodItem] = useState([]);
 
+  const userRole = localStorage.getItem("userRole");
+  const userEmail = localStorage.getItem("userEmail");
+
   const loadData = async () => {
-    let response = await fetch("http://localhost:5000/api/foodData", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    let data = await response.json();
-    setfoodItem(data[0] || []);
-    setfoodcat(data[1] || []);
-    // console.log(response[0], response[1]);
+    try {
+      let response;
+
+      if (userRole === "vendor") {
+        response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/api/myDishes`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: userEmail }),
+          }
+        );
+        const data = await response.json();
+        setfoodItem(data[0] || []);
+        setfoodcat(data[1] || []);
+      } else {
+        response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/api/foodData`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await response.json();
+        setfoodItem(data[0] || []);
+        setfoodcat(data[1] || []);
+      }
+    } catch (error) {
+      console.error("Error loading data:", error);
+    }
+  };
+
+  const handleSearch = (query) => {
+    setsearch(query);
   };
 
   useEffect(() => {
@@ -29,7 +60,7 @@ export default function Home() {
   return (
     <div>
       <div>
-        <Navbar />{" "}
+        <Navbar onSearch={handleSearch} />{" "}
       </div>
       {/* <div>
         <Carousal />{" "}
@@ -113,35 +144,35 @@ export default function Home() {
         {foodCat.length !== 0
           ? foodCat.map((data) => {
               return (
-                <div className="row mb-3">
-                  <div key={data._id} className="fs-3 m-3">
-                    {data.CategoryName}
+                  <div key={data._id} className="row mb-3">
+                    <div className="fs-3 m-3">{data.CategoryName}</div>
+                    <hr />
+                    {foodItem.length !== 0 ? (
+                      foodItem
+                        .filter(
+                          (item) =>
+                            item.CategoryName === data.CategoryName &&
+                            item.name
+                              .toLowerCase()
+                              .includes(search.toLowerCase())
+                        )
+                        .map((item) => {
+                          return (
+                            <div
+                              key={item._id}
+                              className="col-12 col-md-6 col-lg-3"
+                            >
+                              <Card
+                                foodItem={item}
+                                options={item.options}
+                              />
+                            </div>
+                          );
+                        })
+                    ) : (
+                      <div>No such data found</div>
+                    )}
                   </div>
-                  <hr />
-                  {foodItem.length !== 0 ? (
-                    foodItem
-                      .filter(
-                        (item) =>
-                          item.CategoryName === data.CategoryName &&
-                          item.name.toLowerCase().includes(search.toLowerCase())
-                      )
-                      .map((filterItems) => {
-                        return (
-                          <div
-                            key={filterItems._id}
-                            className="col-12 col-md-6 col-lg-3"
-                          >
-                            <Card
-                              foodItem={filterItems}
-                              options={filterItems.options}
-                            ></Card>
-                          </div>
-                        );
-                      })
-                  ) : (
-                    <div>No such data found</div>
-                  )}
-                </div>
               );
             })
           : ""}
