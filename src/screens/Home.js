@@ -4,13 +4,22 @@ import Carousal from "../components/Carousal";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
 
-export default function Home() {
+export default function Home({ onSearch }) {
   const [search, setsearch] = useState("");
   const [foodCat, setfoodcat] = useState([]);
   const [foodItem, setfoodItem] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const userRole = localStorage.getItem("userRole");
   const userEmail = localStorage.getItem("userEmail");
+
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    onSearch && onSearch(query);
+  };
+
+  const handleSearchClick = () => setsearch(searchQuery);
 
   const loadData = async () => {
     try {
@@ -60,7 +69,7 @@ export default function Home() {
   return (
     <div>
       <div>
-        <Navbar onSearch={handleSearch} />{" "}
+        <Navbar />{" "}
       </div>
       {/* <div>
         <Carousal />{" "}
@@ -140,39 +149,48 @@ export default function Home() {
         </div>
       </div> */}
 
+      {localStorage.getItem("authToken") ? (
+        <div className="searchbar d-flex align-items-center">
+          <input
+            type="text"
+            className="myinput d-none d-md-block me-2"
+            placeholder="Search dishes..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+          <button className="btn btn-outline-dark" onClick={handleSearchClick}>
+            🔎
+          </button>
+        </div>
+      ) : null}
       <div className="container">
         {foodCat.length !== 0
           ? foodCat.map((data) => {
               return (
-                  <div key={data._id} className="row mb-3">
-                    <div className="fs-3 m-3">{data.CategoryName}</div>
-                    <hr />
-                    {foodItem.length !== 0 ? (
-                      foodItem
-                        .filter(
-                          (item) =>
-                            item.CategoryName === data.CategoryName &&
-                            item.name
-                              .toLowerCase()
-                              .includes(search.toLowerCase())
-                        )
-                        .map((item) => {
-                          return (
-                            <div
-                              key={item._id}
-                              className="col-12 col-md-6 col-lg-3"
-                            >
-                              <Card
-                                foodItem={item}
-                                options={item.options}
-                              />
-                            </div>
-                          );
-                        })
-                    ) : (
-                      <div>No such data found</div>
-                    )}
-                  </div>
+                <div key={data._id} className="row mb-3">
+                  <div className="fs-3 m-3">{data.CategoryName}</div>
+                  <hr />
+                  {foodItem.length !== 0 ? (
+                    foodItem
+                      .filter(
+                        (item) =>
+                          item.CategoryName === data.CategoryName &&
+                        item.name.toLowerCase().includes(search.toLowerCase())
+                      )
+                      .map((item) => {
+                        return (
+                          <div
+                            key={item._id}
+                            className="col-12 col-md-6 col-lg-3"
+                          >
+                            <Card foodItem={item} options={item.options} />
+                          </div>
+                        );
+                      })
+                  ) : (
+                    <div>No such data found</div>
+                  )}
+                </div>
               );
             })
           : ""}

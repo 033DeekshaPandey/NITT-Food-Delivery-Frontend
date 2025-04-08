@@ -118,4 +118,7 @@ navbar component */
   border-radius: .25rem;
  }
 
-
+.searchbar {
+  max-width: 90%;
+  margin: 20px 50px;
+}

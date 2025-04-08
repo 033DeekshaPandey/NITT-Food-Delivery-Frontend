@@ -7,9 +7,8 @@ import Cart from "../screens/Cart";
 import { useCart } from "./ContextReducer";
 import "../App.css";
 
-export default function Navbar({ onSearch }) {
+export default function Navbar() {
   const [cartView, setCartView] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
 
   let data = useCart();
   const navigate = useNavigate();
@@ -21,14 +20,6 @@ export default function Navbar({ onSearch }) {
   };
 
   const userRole = localStorage.getItem("userRole");
-
-  const handleSearchChange = (e) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-    onSearch && onSearch(query);
-  };
-
-  const handleSearchClick = () => onSearch(searchQuery);
 
   return (
     <div>
@@ -118,26 +109,6 @@ export default function Navbar({ onSearch }) {
               ) : (
                 ""
               )}
-              {localStorage.getItem("authToken") ? (
-                <li className="nav-item">
-                  <div className="d-flex align-items-center">
-                    <input
-                      type="text"
-                      className="myinput d-none d-md-block me-2"
-                      placeholder="Search dishes..."
-                      value={searchQuery}
-                      onChange={handleSearchChange}
-                      style={{ maxWidth: "200px" }}
-                    />
-                    <button
-                      className="btn btn-outline-dark"
-                      onClick={handleSearchClick}
-                    >
-                      🔎
-                    </button>
-                  </div>
-                </li>
-              ) : null}
             </ul>
             {!localStorage.getItem("authToken") ? (
               <div className="d-flex">
