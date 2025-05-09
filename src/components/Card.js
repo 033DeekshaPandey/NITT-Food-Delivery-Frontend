@@ -1,17 +1,17 @@
-import "../MainStyles.css";
+// import "../MainStyles.css";
+import "../App.css";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatchCart, useCart } from "./ContextReducer";
 
 export default function Card(props) {
   let dispatch = useDispatchCart();
   let data = useCart();
-  const priceRef = useRef();
-  let options = props.options;
+  // const priceRef = useRef();
   //console.log(props);
-  let priceOptions = Object.keys(options);
+  // let priceOptions = Object.keys(options);
 
   const [qty, setQty] = useState(1);
-  const [size, setSize] = useState("");
+  // const [size, setSize] = useState("");
   const [cookname, setcookname] = useState("");
 
   const [isEditing, setIsEditing] = useState(false);
@@ -20,9 +20,10 @@ export default function Card(props) {
     category: props.foodItem.category,
     description: props.foodItem.description,
     availability: props.foodItem.availability,
-    options: props.foodItem.options,
+    price: props.foodItem.price,
     oilType: props.foodItem.oilType,
     calories: props.foodItem.calories,
+    weight: props.foodItem.weight,
   });
 
   const loadData = async () => {
@@ -119,7 +120,7 @@ export default function Card(props) {
       }
     }
     if (food.length !== 0) {
-      if (food.size === size) {
+      if (food.qty === qty) {
         await dispatch({
           type: "UPDATE",
           id: props.foodItem._id,
@@ -127,14 +128,13 @@ export default function Card(props) {
           qty: qty,
         });
         return;
-      } else if (food.size !== size) {
+      } else {
         await dispatch({
           type: "ADD",
           id: props.foodItem._id,
           name: props.foodItem.name,
           price: finalPrice,
           qty: qty,
-          size: size,
           email: props.foodItem.email,
         });
         return;
@@ -147,24 +147,23 @@ export default function Card(props) {
       name: props.foodItem.name,
       price: finalPrice,
       qty: qty,
-      size: size,
       email: props.foodItem.email,
     });
   };
-  let finalPrice = qty * parseInt(options[size]);
-  useEffect(() => {
-    if (priceRef.current) {
-      setSize(priceRef.current.value);
-    }
-  }, []);
+  // let finalPrice = qty * parseInt(options[size]);
+  let finalPrice = qty * parseInt(props.foodItem.price);
+  // useEffect(() => {
+  //   if (priceRef.current) {
+  //     setSize(priceRef.current.value);
+  //   }
+  // }, []);
 
   const userRole = localStorage.getItem("userRole");
 
   return (
     <div className="card-container" style={{ margin: "10px" }}>
-      {/* <div style={{ width: "17rem", maxHeight: "500px" }}> */}
-      <div className="w-100" style={{ maxHeight: "500px" }}>
-      <img
+      <div className="w-100">
+        <img
           src={props.foodItem.img}
           className="card-img-top"
           alt="..."
@@ -176,7 +175,7 @@ export default function Card(props) {
               Name of Dish:{" "}
               <input
                 type="text"
-                className="card-input mb-2"
+                className=" myinput "
                 value={editedDish.name}
                 onChange={(e) =>
                   setEditedDish({ ...editedDish, name: e.target.value })
@@ -186,7 +185,7 @@ export default function Card(props) {
               Description:{" "}
               <input
                 type="text"
-                className="card-input mb-2"
+                className=" myinput "
                 value={editedDish.description}
                 onChange={(e) =>
                   setEditedDish({
@@ -195,10 +194,55 @@ export default function Card(props) {
                   })
                 }
               />
+              <br />
+              Price (₹):{" "}
+              <input
+                type="number"
+                className=" myinput "
+                value={editedDish.price}
+                onChange={(e) =>
+                  setEditedDish({
+                    ...editedDish,
+                    price: e.target.value,
+                  })
+                }
+              />
+              <br />
+              Weight per plate (grams):{" "}
+              <input
+                type="number"
+                className=" myinput "
+                value={editedDish.weight}
+                onChange={(e) =>
+                  setEditedDish({
+                    ...editedDish,
+                    weight: e.target.value,
+                  })
+                }
+              />
+              <br />
+              Type of Oil Used:{" "}
+              <select
+                type="text"
+                className=" myinput "
+                value={editedDish.oilType}
+                onChange={(e) =>
+                  setEditedDish({
+                    ...editedDish,
+                    oilType: e.target.value,
+                  })
+                }
+              >
+                <option value="Refined Oil">Refined Oil</option>
+                <option value="Mustard Oil">Mustard Oil</option>
+                <option value="Olive Oil">Olive Oil</option>
+                <option value="Coconut Oil">Coconut Oil</option>
+              </select>
+              <br />
               Availability:{" "}
               <input
                 type="text"
-                className="card-input mb-2"
+                className=" myinput "
                 placeholder="Enter availability time"
                 value={editedDish.availability}
                 onChange={(e) =>
@@ -208,42 +252,15 @@ export default function Card(props) {
                   })
                 }
               />
-              Half:{" "}
-              <input
-                type="number"
-                className="card-input mb-2"
-                value={editedDish.options.half}
-                placeholder="Price for half"
-                onChange={(e) =>
-                  setEditedDish({
-                    ...editedDish,
-                    options: { ...editedDish.options, half: e.target.value },
-                  })
-                }
-              />
-              Full:{" "}
-              <input
-                type="number"
-                className="card-input mb-2"
-                value={editedDish.options.full}
-                placeholder="Price for full"
-                onChange={(e) =>
-                  setEditedDish({
-                    ...editedDish,
-                    options: { ...editedDish.options, full: e.target.value },
-                  })
-                }
-              />
+              <br />
               <div className="d-flex justify-content-end">
-                <button
-                  onClick={handleSaveClick}
-                  className="btn btn-success me-2"
-                >
+                <button onClick={handleSaveClick} className="m-2 card-btn">
                   Save
                 </button>
                 <button
                   onClick={() => setIsEditing(false)}
-                  className="btn btn-secondary"
+                  className="m-2 card-btn"
+                  style={{ backgroundColor: "red" }}
                 >
                   Cancel
                 </button>
@@ -252,19 +269,24 @@ export default function Card(props) {
           ) : (
             <>
               <h5 className="card-title">{props.foodItem.name}</h5>
-              <div>Cookname : {cookname}</div>
+              <div>Cook Name : {cookname}</div>
+              <br />
               <div>{props.foodItem.description}</div>
+              <br />
               <div>Type of Oil Used : {props.foodItem.oilType}</div>
-              <div>Calories : {props.foodItem.calories}</div>
+              <div>Weight per plate : {props.foodItem.weight} grams</div>
+              <div>Calories per plate : {props.foodItem.calories} kCals</div>
               <div>Availability : {props.foodItem.availability}</div>
+              <br />
               {userRole === "user" ? (
                 <>
                   <div className="card-container w-100">
+                    Number of Servings:
                     <select
                       className=" card-select m-2 h-100 rounded"
                       onChange={(e) => setQty(e.target.value)}
                     >
-                      {Array.from(Array(6), (e, i) => {
+                      {Array.from(Array(5), (e, i) => {
                         return (
                           <option key={i + 1} value={i + 1}>
                             {" "}
@@ -273,28 +295,15 @@ export default function Card(props) {
                         );
                       })}
                     </select>
-                    <select
-                      className="myselect m-2 h-100 rounded"
-                      ref={priceRef}
-                      onChange={(e) => setSize(e.target.value)}
-                    >
-                      {priceOptions.map((data) => {
-                        return (
-                          <option key={data} value={data}>
-                            {data}
-                          </option>
-                        );
-                      })}
-                    </select>
-                    <div className="d-inline h-100 fs-5">
-                      Rs. {finalPrice}/-
+                    <br />
+                    <div className="d-inline h-100 fs-5 mt-1">
+                      Price: ₹ {finalPrice}/-
                     </div>
                   </div>
                 </>
               ) : (
                 <>
-                  <div>Half : Rs. {props.foodItem.options.half}</div>
-                  <div>Full : Rs. {props.foodItem.options.full}</div>
+                  <div>Price : ₹ {props.foodItem.price}</div>
                 </>
               )}
             </>
@@ -302,18 +311,27 @@ export default function Card(props) {
         </div>
         {userRole === "vendor" ? (
           <div className="d-flex justify-center mt-2">
-            <button className="m-2 card-btn" onClick={handleEditClick}>
-              Edit ✏️
-            </button>
-            <button className="m-2 card-btn" onClick={handleDeleteClick}>
-              Delete 🗑️
-            </button>
+            {isEditing ? (
+              ""
+            ) : (
+              <>
+                <button className="m-2 card-btn" onClick={handleEditClick}>
+                  Edit ✏️
+                </button>
+                <button className="m-2 card-btn" onClick={handleDeleteClick}>
+                  Delete 🗑️
+                </button>
+              </>
+            )}
           </div>
         ) : (
           localStorage.getItem("authToken") && (
-              <button className="justify-center ms-2 card-btn" onClick={handleAddToCart}>
-                Add to Cart
-              </button>
+            <button
+              className="justify-center ms-2 card-btn"
+              onClick={handleAddToCart}
+            >
+              Add to Cart
+            </button>
           )
         )}
 

@@ -8,18 +8,24 @@ function AddDish() {
     CategoryName: "",
     name: "",
     img: "",
-    half: "",
-    full: "",
+    price: "",
     email: localStorage.getItem("userEmail"),
     description: "",
     availability: "",
     oilType: "",
     calories: "",
+    weight: "",
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(dish);
+
+    if (!dish.oilType || dish.oilType.trim() === "") {
+      alert("Please select a valid oil type.");
+      return;
+    }
+
     const response = await fetch(
       `${process.env.REACT_APP_BACKEND_URL}/api/fooditem`,
       {
@@ -33,24 +39,22 @@ function AddDish() {
 
     const json = await response.json();
     console.log(json);
+
     if (!json.success) {
       alert(json.message);
-      //save the auth toke to local storage and redirect
-      //   localStorage.setItem('token', json.authToken)
-      //   navigate("/login")
     } else {
       alert(json.message);
       setDish({
         CategoryName: "",
         name: "",
         img: "",
-        half: "",
-        full: "",
+        price: "",
         email: localStorage.getItem("userEmail"),
         description: "",
         availability: "",
         oilType: "",
         calories: "",
+        weight: "",
       });
     }
   };
@@ -106,29 +110,17 @@ function AddDish() {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="exampleInputHalfPlate" className="form-label">
-                Half Plate Price
+              <label htmlFor="exampleInputPrice" className="form-label">
+                Price per plate
               </label>
               <input
-                type="text"
+                type="number"
                 className=" myinput "
-                name="half"
-                id="exampleInputHalfPlate"
-                value={dish.half}
+                name="price"
+                id="exampleInputPrice"
+                value={dish.price}
                 onChange={onChange}
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="exampleInputfullPlate" className="form-label">
-                Full Plate Price
-              </label>
-              <input
-                type="text"
-                className=" myinput "
-                name="full"
-                id="exampleInputfullPlate"
-                value={dish.full}
-                onChange={onChange}
+                onWheel={(e) => e.target.blur()}
               />
             </div>
             <div className="mb-3">
@@ -158,13 +150,14 @@ function AddDish() {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="oilType" className="form-label">
+              <label htmlFor="exampleInputOilType" className="form-label">
                 Type of Oil Used
               </label>
               <select
-                id=" myinput "
+                type="text"
+                className=" myinput "
                 name="oilType"
-                className="form-control"
+                id="exampleInputOilType"
                 value={dish.oilType}
                 onChange={onChange}
               >
@@ -175,19 +168,20 @@ function AddDish() {
                 <option value="Coconut Oil">Coconut Oil</option>
               </select>
             </div>
-            {/* <div className="mb-3">
-              <label htmlFor="exampleInputcalories" className="form-label">
-                Calories
+            <div className="mb-3">
+              <label htmlFor="exampleInputweight" className="form-label">
+                Weight per plate (grams)
               </label>
               <input
-                type="text"
+                type="number"
                 className=" myinput "
-                name="calories"
-                id="exampleInputcalories"
-                value={dish.calories}
+                name="weight"
+                id="exampleInputweight"
+                value={dish.weight}
                 onChange={onChange}
+                onWheel={(e) => e.target.blur()}
               />
-            </div> */}
+            </div>
             <button type="submit" className="m-3 mybtn">
               Submit
             </button>

@@ -3,13 +3,19 @@ import Navbar from "../components/Navbar";
 import Carousal from "../components/Carousal";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
-import "../MainStyles.css";
+// import "../MainStyles.css";
+import "../App.css";
 
 export default function Home({ onSearch }) {
-  const [search, setsearch] = useState("");
+  // const [search, setsearch] = useState("");
   const [foodCat, setfoodcat] = useState([]);
   const [foodItem, setfoodItem] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedOilType, setSelectedOilType] = useState("");
+  const [priceRange, setPriceRange] = useState([0, 500]);
+  const [calorieRange, setCalorieRange] = useState([0, 500]);
 
   const userRole = localStorage.getItem("userRole");
   const userEmail = localStorage.getItem("userEmail");
@@ -20,7 +26,7 @@ export default function Home({ onSearch }) {
     onSearch && onSearch(query);
   };
 
-  const handleSearchClick = () => setsearch(searchQuery);
+  const handleSearchClick = () => setSearchQuery(searchQuery);
 
   const loadData = async () => {
     try {
@@ -59,9 +65,9 @@ export default function Home({ onSearch }) {
     }
   };
 
-  const handleSearch = (query) => {
-    setsearch(query);
-  };
+  // const handleSearch = (query) => {
+  //   setsearch(query);
+  // };
 
   useEffect(() => {
     loadData();
@@ -73,25 +79,96 @@ export default function Home({ onSearch }) {
         <Navbar />{" "}
       </div>
       <div className="main-content">
-        {localStorage.getItem("authToken") ? (
-          <div className="left-section">
-            <div className="searchbar d-flex align-items-center">
-              <input
-                type="text"
-                className="myinput d-none d-md-block me-2"
-                placeholder="Search dishes..."
-                value={searchQuery}
-                onChange={handleSearchChange}
-              />
-              <button
-                className="btn btn-outline-dark"
-                onClick={handleSearchClick}
+        <div className="left-section">
+          <div className="searchbar d-flex align-items-center">
+            <input
+              type="text"
+              className="myinput d-none d-md-block me-2"
+              placeholder="Search dishes..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
+            <button
+              className="btn btn-outline-dark"
+              onClick={handleSearchClick}
+            >
+              🔎
+            </button>
+          </div>
+          <br />
+          <div className="filters mt-3">
+            <div className="filter-group mb-2">
+              <label>Category</label>
+              <select
+                className=" myinput "
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
               >
-                🔎
-              </button>
+                <option value="">All</option>
+                {foodCat.map((cat) => (
+                  <option key={cat._id} value={cat.CategoryName}>
+                    {cat.CategoryName}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <br />
+            <div className="filter-group mb-2">
+              <label>Oil Type</label>
+              <select
+                className=" myinput "
+                value={selectedOilType}
+                onChange={(e) => setSelectedOilType(e.target.value)}
+              >
+                <option value="">All</option>
+                <option value="Refined Oil">Refined Oil</option>
+                <option value="Mustard Oil">Mustard Oil</option>
+                <option value="Coconut Oil">Coconut Oil</option>
+                <option value="Olive Oil">Olive Oil</option>
+                {/* <option value="No Oil">No Oil</option> */}
+              </select>
+            </div>
+            <br />
+            <div className="filter-group mb-2">
+              <label>Price Range (Under ₹{priceRange[1]})</label>
+              <input
+                className=" myinput "
+                type="range"
+                min="0"
+                max="500"
+                value={priceRange[1]}
+                onChange={(e) => setPriceRange([0, Number(e.target.value)])}
+              />
+            </div>
+            <br />
+            <div className="filter-group mb-2">
+              <label>Calorie Range</label>
+              <select
+                className="myinput"
+                value={calorieRange.join("-")}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value === "All") {
+                    setCalorieRange([0, Infinity]);
+                  } else if (value === "500+") {
+                    setCalorieRange([501, Infinity]);
+                  } else {
+                    const [min, max] = value.split("-").map(Number);
+                    setCalorieRange([min, max]);
+                  }
+                }}
+              >
+                <option value="All">All</option>
+                <option value="0-100">0 - 100</option>
+                <option value="100-200">100 - 200</option>
+                <option value="200-300">200 - 300</option>
+                <option value="300-400">300 - 400</option>
+                <option value="400-500">400 - 500</option>
+                <option value="500+">500+</option>
+              </select>
             </div>
           </div>
-        ) : null}
+        </div>
         <div className="right-section">
           <div className="home-container">
             {foodCat.length !== 0
@@ -104,13 +181,27 @@ export default function Home({ onSearch }) {
                       <hr />
                       {foodItem.length !== 0 ? (
                         foodItem
-                          .filter(
-                            (item) =>
+                          .filter((item) => {
+                            return (
                               item.CategoryName === data.CategoryName &&
                               item.name
                                 .toLowerCase()
-                                .includes(search.toLowerCase())
-                          )
+                                .includes(searchQuery.toLowerCase()) &&
+                              (selectedCategory === "" ||
+                                item.CategoryName === selectedCategory) &&
+                              (selectedOilType === "" ||
+                                item.oilType === selectedOilType) &&
+                              item.price >= priceRange[0] &&
+                              item.price <= priceRange[1] &&
+                              (
+                                (item.calories === "N/A" && calorieRange[1] === Infinity) ||
+                                (!isNaN(item.calories) &&
+                                  item.calories >= calorieRange[0] &&
+                                  item.calories <= calorieRange[1]
+                                )  
+                              )                            
+                            );
+                          })
                           .map((item) => {
                             return (
                               <div key={item._id} className="card-wrapper">

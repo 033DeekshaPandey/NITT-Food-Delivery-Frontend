@@ -11,8 +11,8 @@ body {
 }
 
 .container {
-  width: 100% !important; /* ensure full width within limits */
-  max-width: 500px !important; /* this will now take effect */
+  width: 100% !important;
+  max-width: 500px !important;
   margin: 50px auto !important;
   background-color: #f6fef8;
   padding: 50px;
@@ -23,8 +23,8 @@ body {
 
 @media (max-width: 600px) {
   .container {
-    max-width: 90%; /* Allows the container to shrink on small screens */
-    padding: 20px; /* Reduce padding on smaller screens */
+    max-width: 90%;
+    padding: 20px;
   }
 }
 

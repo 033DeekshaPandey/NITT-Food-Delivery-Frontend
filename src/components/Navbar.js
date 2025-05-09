@@ -5,8 +5,8 @@ import Modal from "../Modal";
 import Card from "./Card";
 import Cart from "../screens/Cart";
 import { useCart } from "./ContextReducer";
-// import "../App.css";
-import "./Navbar.css";
+import "../App.css";
+// import "../MainStyles.css";
 
 export default function Navbar() {
   const [cartView, setCartView] = useState(false);
