@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Badge } from "react-bootstrap";
 import Modal from "../Modal";
-import Card from "./Card";
 import Cart from "../screens/Cart";
 import { useCart } from "./ContextReducer";
 import "../App.css";
-// import "../MainStyles.css";
 
 export default function Navbar() {
   const [cartView, setCartView] = useState(false);
@@ -48,13 +46,11 @@ export default function Navbar() {
             aria-expanded={isMobileMenuOpen ? "true" : "false"}
             aria-label="Toggle navigation"
           >
-            {/* <span className="navbar-toggler-icon"></span> */}
             <span className="burger-toggler d-lg-none">🍔</span>
           </button>
           <div
-            className={`collapse navbar-collapse ${
-              isMobileMenuOpen ? "show" : ""
-            }`}
+            className={`collapse navbar-collapse ${isMobileMenuOpen ? "show" : ""
+              }`}
           >
             <ul className="navbar-nav me-auto ">
               <li className="nav-item">
@@ -119,27 +115,29 @@ export default function Navbar() {
                   )}
                 </li>
               ) : (
-                ""
+                <>
+                  <li className="nav-item">
+                    <Link
+                      className="btn mx-1"
+                      style={{ color: "black" }}
+                      to="/login"
+                    >
+                      Login
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link
+                      className="btn mx-1"
+                      style={{ color: "black" }}
+                      to="/createuser"
+                    >
+                      SignUp
+                    </Link>
+                  </li>
+                </>
               )}
             </ul>
-            {!localStorage.getItem("authToken") ? (
-              <div className="d-flex">
-                <Link
-                  className="btn mx-1"
-                  style={{ color: "black" }}
-                  to="/login"
-                >
-                  Login
-                </Link>
-                <Link
-                  className="btn mx-1"
-                  style={{ color: "black" }}
-                  to="/createuser"
-                >
-                  SignUp
-                </Link>
-              </div>
-            ) : (
+            {localStorage.getItem("authToken") ? (
               <div>
                 {
                   <div className="d-flex align-items-center justify-content-end">
@@ -164,28 +162,6 @@ export default function Navbar() {
                         ) : null}
                       </div>
                     )}
-                    {/* {userRole !== "vendor" && (
-                      <li className="nav-item">
-                        <Link className="nav-link" to="/cart">
-                          <div
-                            className="btnbg-white text-success mx-2"
-                            style={{ color: "black" }}
-                            onClick={() => setCartView(true)}
-                          >
-                            My Cart {"  "}
-                            <Badge pill bg="danger">
-                              {data.length}
-                            </Badge>
-                          </div>
-                          {cartView ? (
-                            <Modal onClose={() => setCartView(false)}>
-                              <Cart />
-                            </Modal>
-                          ) : null}
-                        </Link>
-                      </li>
-                    )} */}
-
                     <div
                       className="btnbg-white text-danger mx-2"
                       onClick={handleLogout}
@@ -195,6 +171,8 @@ export default function Navbar() {
                   </div>
                 }
               </div>
+            ) : (
+              ""
             )}
           </div>
         </div>

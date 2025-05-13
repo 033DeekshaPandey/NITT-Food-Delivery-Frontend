@@ -1,4 +1,3 @@
-// import "../MainStyles.css";
 import "../App.css";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatchCart, useCart } from "./ContextReducer";
@@ -6,12 +5,8 @@ import { useDispatchCart, useCart } from "./ContextReducer";
 export default function Card(props) {
   let dispatch = useDispatchCart();
   let data = useCart();
-  // const priceRef = useRef();
-  //console.log(props);
-  // let priceOptions = Object.keys(options);
 
   const [qty, setQty] = useState(1);
-  // const [size, setSize] = useState("");
   const [cookname, setcookname] = useState("");
 
   const [isEditing, setIsEditing] = useState(false);
@@ -29,7 +24,7 @@ export default function Card(props) {
   const loadData = async () => {
     let email = props.foodItem.email;
     const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/api/getuser`,
+      `${import.meta.env.VITE_BACKEND_URL}/api/getuser`,
       {
         method: "POST",
         headers: {
@@ -56,7 +51,7 @@ export default function Card(props) {
   const handleSaveClick = async () => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/updateDish`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/updateDish`,
         {
           method: "POST",
           headers: {
@@ -72,7 +67,7 @@ export default function Card(props) {
       const data = await response.json();
       if (data.success) {
         setIsEditing(false);
-        window.location.reload(); // or trigger parent to refresh the list
+        window.location.reload();
       } else {
         alert("Failed to update dish.");
       }
@@ -89,7 +84,7 @@ export default function Card(props) {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/deleteDish`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/deleteDish`,
         {
           method: "POST",
           headers: {
@@ -102,7 +97,7 @@ export default function Card(props) {
       const data = await response.json();
       if (data.success) {
         alert("Dish deleted successfully.");
-        window.location.reload(); // Or refetch the data from the parent
+        window.location.reload();
       } else {
         alert("Failed to delete dish.");
       }
@@ -138,7 +133,7 @@ export default function Card(props) {
           email: props.foodItem.email,
         });
         return;
-      } //console.log(data)
+      }
       return;
     }
     await dispatch({
@@ -150,13 +145,7 @@ export default function Card(props) {
       email: props.foodItem.email,
     });
   };
-  // let finalPrice = qty * parseInt(options[size]);
   let finalPrice = qty * parseInt(props.foodItem.price);
-  // useEffect(() => {
-  //   if (priceRef.current) {
-  //     setSize(priceRef.current.value);
-  //   }
-  // }, []);
 
   const userRole = localStorage.getItem("userRole");
 

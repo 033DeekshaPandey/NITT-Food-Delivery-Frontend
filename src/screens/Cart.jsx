@@ -1,6 +1,4 @@
 import React, { useRef } from "react";
-//import Delete from '@material-ui/icons/Delete'
-//import trash from "../trash.svg"
 import { useCart, useDispatchCart } from "../components/ContextReducer";
 import "../App.css";
 
@@ -16,19 +14,14 @@ export default function Cart() {
       </div>
     );
   }
-  // const handleRemove = (index)=>{
-  //   console.log(index)
-  //   dispatch({type:"REMOVE",index:index})
-  // }
 
   const handleCheckOut = async () => {
     let userEmail = localStorage.getItem("userEmail");
     let response;
-    //console.log(data, localStorage.getItem("userEmail"), new Date());
     for (let i = 0; i < data.length; i++) {
       const { email, ...temp } = data[i];
       temp.userEmail = userEmail;
-      response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/orderData`, {
+      response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/orderData`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -41,33 +34,30 @@ export default function Cart() {
       });
     }
 
-    let res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/checkout`, {
+    let res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/checkout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         amount: totalPrice,
-        // amount: data[0].price,
       }),
     });
     const { order } = await res.json();
     console.log("Order: ", order);
     console.log("Amount: ", order.amount);
     const options = {
-      key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
       amount: order.amount,
       currency: "INR",
       name: "Deeksha",
       description: "RazorPay",
-      // image: "https://avatars.githubusercontent.com/u/25058652?v=4",
       order_id: order.id,
-      callback_url: `${process.env.REACT_APP_BACKEND_URL}/api/paymentverification`,
+      callback_url: `${import.meta.env.VITE_BACKEND_URL}/api/paymentverification`,
       prefill: {
         name: "XYZ",
         email: "XYZ@example.com",
         contact: "9958291698",
-        // contact: process.env.REACT_APP_RAZORPAY_CONTACT
       },
       notes: {
         address: "Razorpay Corporate Office",
@@ -92,15 +82,15 @@ export default function Cart() {
   return (
     <div>
       {console.log(data)}
-      <div className="cart-container m-auto mt-5 table-responsive  table-responsive-sm table-responsive-md" style={{ margin: "20px", padding: "20px"}} >
+      <div className="cart-container m-auto mt-5 table-responsive table-responsive-sm table-responsive-md">
         <table className="table ">
           <thead className=" fs-4" style={{ color: "#c34040" }}>
             <tr>
               <th scope="col">#</th>
               <th scope="col">Name</th>
               <th scope="col">Quantity</th>
-              <th scope="col">Option</th>
-              <th scope="col">Amount</th>
+              {/* <th scope="col">Rate</th> */}
+              <th scope="col">Total Amount</th>
               <th scope="col"></th>
             </tr>
           </thead>
@@ -110,12 +100,12 @@ export default function Cart() {
                 <th scope="row">{index + 1}</th>
                 <td>{food.name}</td>
                 <td>{food.qty}</td>
-                <td>{food.size}</td>
+                {/* <td>{food.size}</td> */}
                 <td>{food.price}</td>
                 <td>
                   <button
                     type="button"
-                    className="mybtn p-0 "
+                    className="mybtn p-1 "
                     style={{ backgroundColor: "#c34040" }}
                     onClick={() => {
                       dispatch({ type: "REMOVE", index: index });
@@ -152,7 +142,7 @@ export default function Cart() {
         </div>
         <div>
           <button
-            className="mybtn  mt-5 "
+            className="mybtn mt-5 "
             style={{ backgroundColor: "#c34040" }}
             onClick={handleCheckOut}
           >

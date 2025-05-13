@@ -12,7 +12,7 @@ export default function MyDishes() {
   const fetchVendorDishes = async () => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/myDishes`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/myDishes`,
         {
           method: "POST",
           headers: {

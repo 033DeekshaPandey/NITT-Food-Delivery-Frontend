@@ -1,17 +1,16 @@
 import "./App.css";
-// import "../MainStyles.css";
-import Home from "./screens/Home";
-import Login from "./screens/Login";
+import Home from "./screens/Home.jsx";
+import Login from "./screens/Login.jsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import "../node_modules/bootstrap-dark-5/dist/css/bootstrap-dark.min.css";
-import "../node_modules/bootstrap/dist/js/bootstrap.bundle";
-import "../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js";
-import Signup from "./components/Signup";
-import { CartProvider } from "./components/ContextReducer";
-import MyOrder from "./screens/MyOrder";
-import AddDish from "./screens/AddDish.js";
-import VendorOrders from "./screens/VendorOrders.js";
+import "bootstrap/dist/js/bootstrap.bundle.js";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import Signup from "./components/Signup.jsx";
+import { CartProvider } from "./components/ContextReducer.jsx";
+import MyOrder from "./screens/MyOrder.jsx";
+import AddDish from "./screens/AddDish.jsx";
+import VendorOrders from "./screens/VendorOrders.jsx";
 
 function App() {
   const userRole = localStorage.getItem("userRole");

@@ -3,11 +3,9 @@ import Navbar from "../components/Navbar";
 import Carousal from "../components/Carousal";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
-// import "../MainStyles.css";
 import "../App.css";
 
 export default function Home({ onSearch }) {
-  // const [search, setsearch] = useState("");
   const [foodCat, setfoodcat] = useState([]);
   const [foodItem, setfoodItem] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,7 +32,7 @@ export default function Home({ onSearch }) {
 
       if (userRole === "vendor") {
         response = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL}/api/myDishes`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/myDishes`,
           {
             method: "POST",
             headers: {
@@ -48,7 +46,7 @@ export default function Home({ onSearch }) {
         setfoodcat(data[1] || []);
       } else {
         response = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL}/api/foodData`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/foodData`,
           {
             method: "POST",
             headers: {
@@ -65,10 +63,6 @@ export default function Home({ onSearch }) {
     }
   };
 
-  // const handleSearch = (query) => {
-  //   setsearch(query);
-  // };
-
   useEffect(() => {
     loadData();
   }, []);
@@ -83,7 +77,7 @@ export default function Home({ onSearch }) {
           <div className="searchbar d-flex align-items-center">
             <input
               type="text"
-              className="myinput d-none d-md-block me-2"
+              className="myinput me-2"
               placeholder="Search dishes..."
               value={searchQuery}
               onChange={handleSearchChange}
@@ -125,7 +119,6 @@ export default function Home({ onSearch }) {
                 <option value="Mustard Oil">Mustard Oil</option>
                 <option value="Coconut Oil">Coconut Oil</option>
                 <option value="Olive Oil">Olive Oil</option>
-                {/* <option value="No Oil">No Oil</option> */}
               </select>
             </div>
             <br />
@@ -171,51 +164,40 @@ export default function Home({ onSearch }) {
         </div>
         <div className="right-section">
           <div className="home-container">
-            {foodCat.length !== 0
-              ? foodCat.map((data) => {
+            {foodCat.length !== 0 &&
+              foodCat.map((data) => {
+                const filteredItems = foodItem.filter((item) => {
                   return (
-                    <div key={data._id} className="row mb-3">
-                      <strong>
-                        <div className="fs-3 m-3">{data.CategoryName}</div>
-                      </strong>
-                      <hr />
-                      {foodItem.length !== 0 ? (
-                        foodItem
-                          .filter((item) => {
-                            return (
-                              item.CategoryName === data.CategoryName &&
-                              item.name
-                                .toLowerCase()
-                                .includes(searchQuery.toLowerCase()) &&
-                              (selectedCategory === "" ||
-                                item.CategoryName === selectedCategory) &&
-                              (selectedOilType === "" ||
-                                item.oilType === selectedOilType) &&
-                              item.price >= priceRange[0] &&
-                              item.price <= priceRange[1] &&
-                              (
-                                (item.calories === "N/A" && calorieRange[1] === Infinity) ||
-                                (!isNaN(item.calories) &&
-                                  item.calories >= calorieRange[0] &&
-                                  item.calories <= calorieRange[1]
-                                )  
-                              )                            
-                            );
-                          })
-                          .map((item) => {
-                            return (
-                              <div key={item._id} className="card-wrapper">
-                                <Card foodItem={item} options={item.options} />
-                              </div>
-                            );
-                          })
-                      ) : (
-                        <div>No such data found</div>
-                      )}
-                    </div>
+                    item.CategoryName === data.CategoryName &&
+                    item.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+                    (selectedCategory === "" || item.CategoryName === selectedCategory) &&
+                    (selectedOilType === "" || item.oilType === selectedOilType) &&
+                    item.price >= priceRange[0] &&
+                    item.price <= priceRange[1] &&
+                    (
+                      (item.calories === "N/A" && calorieRange[1] === Infinity) ||
+                      (!isNaN(item.calories) &&
+                        item.calories >= calorieRange[0] &&
+                        item.calories <= calorieRange[1])
+                    )
                   );
-                })
-              : ""}
+                });
+                if (filteredItems.length === 0) return null;
+
+                return (
+                  <div key={data._id} className="row mb-3">
+                    <strong>
+                      <div className="fs-3 m-3">{data.CategoryName}</div>
+                    </strong>
+                    <hr />
+                    {filteredItems.map((item) => (
+                      <div key={item._id} className="card-wrapper">
+                        <Card foodItem={item} options={item.options} />
+                      </div>
+                    ))}
+                  </div>
+                );
+              })}
           </div>
         </div>
       </div>

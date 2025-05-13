@@ -5,10 +5,10 @@ import "../App.css";
 
 export default function VendorOrders() {
   const [orderData, setOrderData] = useState([]);
-  const vendorEmail = localStorage.getItem("userEmail"); // Get vendor email
+  const vendorEmail = localStorage.getItem("userEmail");
 
   const fetchVendorOrders = async () => {
-    await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/vendorOrders`, {
+    await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vendorOrders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

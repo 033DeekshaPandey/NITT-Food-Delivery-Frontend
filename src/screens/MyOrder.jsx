@@ -8,9 +8,7 @@ export default function MyOrder() {
 
   const fetchMyOrder = async () => {
     console.log(localStorage.getItem("userEmail"));
-    await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/myOrderData`, {
-      // credentials: 'include',
-      // Origin:`${process.env.REACT_APP_FRONTEND_URL}/login`,
+    await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/myOrderData`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +37,6 @@ export default function MyOrder() {
         <div className="row">
           {Object.keys(orderData).length !== 0
             ? Array(orderData).map((data) => {
-                //console.log(data);
                 return data.orderData
                   ? data.orderData.order_data
                       .slice(0)

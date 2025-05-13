@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-// import "../App.css";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 import "../LoginSignup.css";
 
 export default function Signup() {
@@ -17,7 +16,7 @@ export default function Signup() {
   const handleSubmit = async (e, role) => {
     e.preventDefault();
     const updatedCredentials = { ...credentials, role };
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/createuser`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/createuser`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -30,9 +29,6 @@ export default function Signup() {
     console.log(json);
     if (!json.success) {
       alert(json.message);
-      //save the auth toke to local storage and redirect
-      //   localStorage.setItem('token', json.authToken)
-      //   navigate("/login")
     } else {
       alert(json.message);
     }

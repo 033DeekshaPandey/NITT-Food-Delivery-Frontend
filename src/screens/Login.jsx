@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-// import "../App.css";
 import "../LoginSignup.css";
 
 export default function Login() {
@@ -22,7 +21,7 @@ export default function Login() {
       })
     );
     const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/api/loginuser`,
+      `${import.meta.env.VITE_BACKEND_URL}/api/loginuser`,
       {
         method: "POST",
         headers: {
